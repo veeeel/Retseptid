@@ -36,24 +36,4 @@ public class Retsept {
     public List<String> getJuhised() {
         return juhised;
     }
-
-    /*
-    public void väljastaKoostisosad() {
-        System.out.println("=".repeat(50));
-        System.out.println( "\nKoostisosad:\n");
-        for (SelenideElement k : koostisosad) {
-            System.out.println(" ".repeat(4) + k.getText());
-        }
-        System.out.println("=".repeat(50));
-    }
-
-    public void väljastaJuhised() {
-        System.out.println("=".repeat(50));
-        System.out.println( "\nValmistamine:\n");
-        for (String k : juhised) {
-            System.out.println(" ".repeat(4) + k);
-        }
-        System.out.println("=".repeat(50));
-    }*/
-
 }

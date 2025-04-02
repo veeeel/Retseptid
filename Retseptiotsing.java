@@ -6,9 +6,12 @@ public class Retseptiotsing {
     private boolean jätkaSamaToiduainega = false;
     private boolean jätkaSamaRetseptiga = false;
     private String toiduaine = "";
-    private String menüüUrl = Andmekoguja.getVaikemenüüURL();
+    private String menüüUrl = "";
     private Retsept retsept = null;
 
+    /**
+     * Programmi töö juhtimine while-true tsüklis
+     */
     public void start() {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -20,15 +23,23 @@ public class Retseptiotsing {
                 Andmekoguja.lõpeta();
                 break;
             }
-            if (toiduaine.equals("u")) {
+            if (toiduaine.equals("u")) { // juhul kui koostisosa sisendiks antakse välem kui 3 tähte
                 KasutajagaSuhtlemine.väljastaNõudedSisendile();
                 continue;
             }
 
-            uuendaMenüü();
-            System.out.println("toiduaine " + toiduaine);
+            uuendaMenüü(); // vajadusel valime uue koostisosa
 
-            uuendaRetsept();
+            if (toiduaine.equals("q")) {
+                Andmekoguja.lõpeta();
+                break;
+            }
+            if (toiduaine.equals("u")) { // juhul kui koostisosa sisendiks antakse välem kui 3 tähte
+                KasutajagaSuhtlemine.väljastaNõudedSisendile();
+                continue;
+            }
+
+            uuendaRetsept(); // vajadusel valime uue retsepti
 
             if (retsept == null) {
                 KasutajagaSuhtlemine.veateade();
@@ -66,40 +77,43 @@ public class Retseptiotsing {
 
     }
 
+    /**
+     * Kasutajalt uue koostisosa saamine ja selle järgi valikus olevate retseptide uuendamine
+     */
     private void uuendaMenüü() {
         if (!jätkaSamaToiduainega) {
             while (true) {
                 this.toiduaine = KasutajagaSuhtlemine.küsiKoostisosa();
                 try {
                     menüüUrl = Andmekoguja.otsiKoostisosaJärgi(toiduaine);
-                    System.out.println(menüüUrl);
                     break;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     System.out.println("viga menüü uuendamisel");
-                    KasutajagaSuhtlemine.veateade();
+                    //KasutajagaSuhtlemine.veateade();
                 }
             }
         }
-        System.out.println("jätkan sama toiduainega");
     }
 
+    /**
+     * Valikus olevatest retseptidest uue juhusliku valiku tegemine
+     */
     private void uuendaRetsept() {
         if (!jätkaSamaRetseptiga) {
-            System.out.println("jätkan uue retseptiga");
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
-                    retsept = Andmekoguja.valiJuhuslikRetsept(menüüUrl, toiduaine);
+                    retsept = Andmekoguja.valiJuhuslikRetsept();
                     //if (retsept != null) System.out.println("sain retsepti. " + retsept.getPealkiri());
                     return;
                 } catch (Exception e) {
-                    System.out.println("viga retsepti uuendamisel");
-                    e.printStackTrace();
+                    System.out.println("viga retsepti leidmisel");
+                    //e.printStackTrace();
                     break;
                 }
             }
 
-            System.out.println("viga retsepti uuendamisel");
+            System.out.println("viga retsepti leidmisel");
             KasutajagaSuhtlemine.veateade();
             uuendaMenüü();
             }
